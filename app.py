@@ -1,17 +1,10 @@
 import os
-import sys
-import subprocess
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 
-# Ensure 'code' directory is accessible on Python module search path
+# Project base directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CODE_DIR = os.path.join(BASE_DIR, 'code')
-if BASE_DIR not in sys.path:
-    sys.path.insert(0, BASE_DIR)
-if CODE_DIR not in sys.path:
-    sys.path.insert(0, CODE_DIR)
 
 # Initialize FastAPI Application instance
 app = FastAPI(
@@ -143,14 +136,9 @@ def get_jntuk_rules():
         }
     }
 
-# Local/Container Execution Runner
+# Local Development Runner (use: python app.py)
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8501))
-    main_script = os.path.join(CODE_DIR, "main.py")
-    print(f"Starting Streamlit app runner on port {port}...")
-    subprocess.run([
-        sys.executable, "-m", "streamlit", "run", main_script,
-        f"--server.port={port}",
-        "--server.address=0.0.0.0",
-        "--server.headless=true"
-    ])
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))
+    print(f"Starting FastAPI server on http://0.0.0.0:{port} ...")
+    uvicorn.run("app:app", host="0.0.0.0", port=port, reload=True)
