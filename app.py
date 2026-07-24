@@ -13,6 +13,7 @@ for d in [CODE_DIR, ROOT_DIR]:
     if d not in sys.path:
         sys.path.insert(0, d)
 
+# pyrefly: ignore [missing-import]
 from main import main
 
 if __name__ == "__main__":
