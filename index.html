@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Attendance & Performance Analyzer | JNTUK R23 Project 17</title>
+  <meta name="description" content="Academic project dashboard portal for JNTUK R23 B.Tech AI & Data Science Cohort. Featuring Linear Algebra scoring, Custom QuickSort, MongoDB offline resilience, and predictive ML models.">
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --accent-indigo: #6366f1;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --gradient-primary: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(236, 72, 153, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+      font-family: var(--font-sans);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header & Hero Section */
+    header {
+      text-align: center;
+      padding: 4rem 1rem 3rem 1rem;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.5rem 1.25rem;
+      border-radius: 9999px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #a5b4fc;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+      animation: pulse 3s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.2); }
+      100% { transform: scale(1.03); box-shadow: 0 0 12px 4px rgba(99, 102, 241, 0.1); }
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin: 0 auto 2.5rem auto;
+      font-weight: 400;
+    }
+
+    /* Action Buttons */
+    .cta-container {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 4rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.9rem 2.2rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .btn svg {
+      margin-right: 0.5rem;
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    /* Core Architecture Grid */
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: var(--accent-indigo);
+      margin: 0.75rem auto 0 auto;
+      border-radius: 2px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: transparent;
+      transition: background 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .card.indigo:hover::before { background: var(--accent-indigo); }
+    .card.cyan:hover::before { background: var(--accent-cyan); }
+    .card.emerald:hover::before { background: var(--accent-emerald); }
+    .card.rose:hover::before { background: var(--accent-rose); }
+
+    .card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+    }
+
+    .tech-pill {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: #818cf8;
+      margin-right: 0.35rem;
+      margin-bottom: 0.35rem;
+    }
+
+    /* Math Formulas and Specs */
+    .details-row {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
+      margin-bottom: 4rem;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .details-row {
+        grid-template-columns: 1fr;
+      }
+      h1 {
+        font-size: 2.2rem;
+      }
+    }
+
+    .info-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+    }
+
+    .info-box h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .formula {
+      font-family: var(--font-mono);
+      background: rgba(0, 0, 0, 0.3);
+      border-left: 3px solid var(--accent-indigo);
+      padding: 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      overflow-x: auto;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .meta-item {
+      border-left: 2px solid rgba(255, 255, 255, 0.1);
+      padding-left: 1rem;
+    }
+
+    .meta-value {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-indigo);
+    }
+
+    .meta-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Terminal Instructions */
+    .terminal {
+      background: #05070c;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .terminal-header {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .red { background-color: #ef4444; }
+    .yellow { background-color: #f59e0b; }
+    .green { background-color: #10b981; }
+
+    .terminal-title {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      margin-left: 0.5rem;
+    }
+
+    .terminal-body {
+      padding: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: #38bdf8;
+    }
+
+    .line {
+      margin-bottom: 0.5rem;
+      display: flex;
+    }
+
+    .line::before {
+      content: '$';
+      color: var(--text-secondary);
+      margin-right: 0.75rem;
+      user-select: none;
+    }
+
+    .comment {
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+    .comment::before {
+      content: '';
+    }
+
+    .output-text {
+      color: var(--text-primary);
+    }
+    .output-text::before {
+      content: '';
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 0;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border-color);
+      margin-top: 4rem;
+    }
+
+    footer a {
+      color: var(--accent-indigo);
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge">JNTUK R23 Curriculum</div>
+      <h1>Smart Attendance & Performance Analyzer</h1>
+      <p class="subtitle">An advanced academic analytics platform built to assess student trajectories, predict final scores, and flag attendance risks using predictive machine learning algorithms.</p>
+      
+      <div class="cta-container">
+        <!-- Replace the '#' below with the URL of your live deployed Streamlit application -->
+        <a href="https://share.streamlit.io/" target="_blank" class="btn btn-primary" id="launch-btn">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+          </svg>
+          Launch Interactive Dashboard
+        </a>
+        <a href="#setup" class="btn btn-secondary">
+          Run Locally
+        </a>
+      </div>
+    </header>
+
+    <h2 class="section-title">Core Architecture & Rubrics</h2>
+    <div class="grid">
+      <div class="card indigo">
+        <div class="card-icon">📐</div>
+        <h3>Linear Algebra Scoring</h3>
+        <p>Computes composite academic profiles using weighted dot products of student feature vectors against subject credits and mid/external exam weights.</p>
+        <div>
+          <span class="tech-pill">Vector Dot Product</span>
+          <span class="tech-pill">Weights Matrix</span>
+        </div>
+      </div>
+
+      <div class="card cyan">
+        <div class="card-icon">⚡</div>
+        <h3>Custom Sorting Engine</h3>
+        <p>Ranks cohort records using a pure Python QuickSort algorithm featuring median-of-three pivot selection to guarantee efficient O(N log N) execution.</p>
+        <div>
+          <span class="tech-pill">QuickSort</span>
+          <span class="tech-pill">Divide & Conquer</span>
+        </div>
+      </div>
+
+      <div class="card emerald">
+        <div class="card-icon">🛡️</div>
+        <h3>Database Fallback Engine</h3>
+        <p>Integrates MongoDB via PyMongo with an automated CSV file fallback system, guaranteeing full functionality during local offline evaluations.</p>
+        <div>
+          <span class="tech-pill">MongoDB Atlas</span>
+          <span class="tech-pill">CSV Fallback</span>
+          <span class="tech-pill">75% Alerting</span>
+        </div>
+      </div>
+
+      <div class="card rose">
+        <div class="card-icon">🤖</div>
+        <h3>AI/ML Analytics Layer</h3>
+        <p>Segments cohorts into risk categories via K-Means Clustering and fits Linear Regression models to predict Semester 1-2 growth curves.</p>
+        <div>
+          <span class="tech-pill">K-Means</span>
+          <span class="tech-pill">Linear Regression</span>
+          <span class="tech-pill">Scikit-Learn</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-row">
+      <div class="info-box">
+        <h2>Mathematical Framework</h2>
+        <p>Students are evaluated using a five-dimensional feature vector mapped onto subject credit scales:</p>
+        <div class="formula">
+          Score_i = S_i · W = Σ (S_i[j] × W[j])
+        </div>
+        <p>Where W (Weight Vector) is defined as:</p>
+        <div class="formula" style="font-size: 0.8rem;">
+          W = [0.25 (Attendance), 0.15 (Mid 1), 0.15 (Mid 2), 0.35 (External), -0.10 (Backlogs)]
+        </div>
+        
+        <div class="meta-grid">
+          <div class="meta-item">
+            <div class="meta-value">80 Students</div>
+            <div class="meta-label">Total Cohort Size</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-value">75%</div>
+            <div class="meta-label">Min Attendance Limit</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="terminal" id="setup">
+        <div class="terminal-header">
+          <div class="terminal-dot red"></div>
+          <div class="terminal-dot yellow"></div>
+          <div class="terminal-dot green"></div>
+          <div class="terminal-title">bash — Local Server Setup</div>
+        </div>
+        <div class="terminal-body">
+          <div class="line comment"># Clone or navigate to the directory</div>
+          <div class="line">cd smart-attendance-performance-analyzer</div>
+          <div class="line comment"># Initialize the python environment</div>
+          <div class="line">python -m venv venv</div>
+          <div class="line">source venv/bin/activate <span class="comment"># On Windows: .\venv\Scripts\Activate.ps1</span></div>
+          <div class="line comment"># Install the pinned requirements</div>
+          <div class="line">pip install -r requirements.txt</div>
+          <div class="line comment"># Run the streamlit application locally</div>
+          <div class="line">streamlit run code/main.py</div>
+          <div class="line output-text" style="color: #10b981; margin-top: 1rem;">✔ Connection active at http://localhost:8501</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Department of CSE (AI & Data Science) | Interdisciplinary Project 17 | Cohort 2025 Admitted Batch</p>
+      <p style="margin-top: 0.5rem;">Powered by Streamlit, Scikit-Learn, PyMongo & Python 3.11.</p>
+    </footer>
+  </div>
+
+  <script>
+    // Dynamically update the redirect URL if deploying to a known custom URL
+    // You can paste your Streamlit Share or Render deployment link here
+    const streamlitAppUrl = "https://share.streamlit.io/"; // Change this to your live deployment link
+    
+    // Optional automatic redirection logic if desired by developer:
+    // window.location.replace(streamlitAppUrl);
+  </script>
+</body>
+</html>
