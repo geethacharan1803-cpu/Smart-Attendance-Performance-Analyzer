@@ -47,6 +47,10 @@ st.set_page_config(
 # ==============================================================================
 # MODULE IMPORTS (after st.set_page_config)
 # ==============================================================================
+code_dir = os.path.dirname(os.path.abspath(__file__))
+if code_dir not in sys.path:
+    sys.path.insert(0, code_dir)
+
 from config import (
     BASE_DIR, COLORS, BATCH_INFO, SUBJECT_COLUMNS, SUBJECT_LABELS,
     CREDIT_WEIGHTS, JNTUK_ATTENDANCE_CUTOFF
